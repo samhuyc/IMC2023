@@ -16,3 +16,7 @@ def split_data_by_product(df):
         markets[prod]= df[df['product']==prod]
     return markets
 
+def main():
+    print("in main")
+
+main()
