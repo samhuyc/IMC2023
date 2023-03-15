@@ -1,5 +1,6 @@
 import pandas as pd 
 import numpy as np 
+import plotly.graph_objs as go
 
 def read_market_data(fileName):
     df = pd.read_csv(fileName).fillna("")
@@ -16,7 +17,20 @@ def split_data_by_product(df):
         markets[prod]= df[df['product']==prod]
     return markets
 
+
 def main():
-    print("in main")
+    fileName = "3_14_1/trades.csv"
+    product = "PEARLS"
+
+    df_both = read_market_data(fileName)
+    df_single = split_data_by_product(df_both)
+    df = df_single[product]
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(name = "best bid", x=df["timestamp"], y=df["bid_price_1"]))
+    fig.add_trace(go.Scatter(name = "best ask", x=df["timestamp"], y=df["ask_price_1"]))
+
+    fig.show()
+
+
 
 main()
