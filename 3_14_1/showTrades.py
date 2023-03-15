@@ -9,13 +9,23 @@ class Trader:
         print(f"timestamp = {state.timestamp}")
         print("")
 
-        for product in ["PEARLS", "BANANAS"]:
+        for product in ["BANANAS"]:
                 if product in state.market_trades:
                     tradeLst = state.market_trades[product]
                     for i in range(len(tradeLst)):
                         price = tradeLst[i].price
                         volume = tradeLst[i].quantity
-                        print(f"{volume} amount of {product} traded @ {price}")
+                        print(f"{volume} of {product} traded @ {price}")
+                
+                if product in state.own_trades:
+                    tradeLst = state.own_trades[product]
+                    for i in range(len(tradeLst)):
+                        price = tradeLst[i].price
+                        volume = tradeLst[i].quantity
+                        if tradeLst[i].buyer == "SUBMISSION":
+                            print(f"{volume} of {product} traded @ {price} (SELF BUY)")  
+                        else:
+                            print(f"{volume} of {product} traded @ {price} (SELF SELL)") 
 
         return result
 
