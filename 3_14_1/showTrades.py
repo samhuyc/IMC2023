@@ -5,6 +5,18 @@ class Trader:
 
     def run(self, state: TradingState) -> Dict[str, List[Order]]:
         result = {}
+        print("")
+        print(f"timestamp = {state.timestamp}")
+        print("")
+
+        for product in ["PEARLS", "BANANAS"]:
+                if product in state.market_trades:
+                    tradeLst = state.market_trades[product]
+                    for i in range(len(tradeLst)):
+                        price = tradeLst[i].price
+                        volume = tradeLst[i].quantity
+                        print(f"{volume} amount of {product} traded @ {price}")
+
         return result
 
 '''
