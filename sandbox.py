@@ -124,7 +124,7 @@ def randomTrend(vol):
 
 def main():
     
-    priceLst = randomTrend(3)
+    priceLst = randomTrend(1)
     ma5 = ma(priceLst, 5)
     ma10 = ma(priceLst, 10)
     ma30 = ma(priceLst, 30)
@@ -132,8 +132,8 @@ def main():
     fig = go.Figure()
     fig.add_trace(go.Scatter(name = "price",  y=priceLst))
     fig.add_trace(go.Scatter(name = "MA5", y=ma5))
-    #fig.add_trace(go.Scatter(name = "MA10", y=ma10))
-    #fig.add_trace(go.Scatter(name = "MA30", y=ma30))
+    fig.add_trace(go.Scatter(name = "MA10", y=ma10))
+    fig.add_trace(go.Scatter(name = "MA30", y=ma30))
 
     fig.show()
 
