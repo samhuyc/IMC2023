@@ -17,16 +17,11 @@ this git repo is for IMC prosperity challenge
 - yields positive in both pearls and banana but underwhelming performance
 - need a better log output---according to discord, the state.market_trades(); state.own_trades() have bugs, resulting in previous trades show up multiple times
 - now is market volume, historical trade naive, need to incorporate; change scalers reacting to previous volume
-- delta - neutral
+- delta - neutral volume?
 
 
 # Ideas: 
 - momentum strat
 - combination mean reversion + momentum (switch between volatility = standard dev.)
-- cut into spread (3 tier buy-sell)
-	current spread = 6x
-	bid discounted = best bid + x, + 2x, + 3x
-	ask discount = b
-	check position = I, 
-	set bid = best bid + 0.1x; ask = best ask - 0.1x, 
+
 	
