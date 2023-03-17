@@ -1,11 +1,12 @@
 from typing import *
 from datamodel import *
-import random as rd
 import numpy as np
 import pandas as pd
+
 import plotly.express as px
 import plotly.graph_objects as go
 import math
+import random as rd
 import datetime as dt
 import yfinance as yf
 
@@ -17,38 +18,42 @@ class Trader:
         result = {}
 
         for product in state.order_depths.keys():
-            if product == 'BANANAS':
-                bTrades = state.market_trades[product]
-                numTrade = 0
-                sumPrice = 0
-                while numTrade < len(bTrades):
-                    tradePrice = bTrades[numTrade].price
-                    sumPrice += tradePrice
-                    numTrade += 1
-                if numTrade > 0:
-                    prices.append(sumPrice/numTrade)
-                    acceptable_price = ma(prices,5)
-                else:
-                    acceptable_price = 0
-
+            inventory = 0
+            if product == 'BANANAS': 
+                if product in state.position.keys():
+                    inventory = state.position[product]
                 order_depth = state.order_depths[product]
                 orders = []
 
-                if len(order_depth.sell_orders) > 0:
+                if len(order_depth.sell_orders) > 0 and len(order_depth.buy_orders) > 0:
                     best_ask = min(order_depth.sell_orders.keys())
                     best_ask_volume = order_depth.sell_orders[best_ask]
-                    if best_ask < acceptable_price:
-                        orders.append(Order(product, best_ask, -best_ask_volume))
-
-                if len(order_depth.buy_orders) != 0:
                     best_bid = max(order_depth.buy_orders.keys())
                     best_bid_volume = order_depth.buy_orders[best_bid]
-                    if best_bid > acceptable_price:
-                        orders.append(Order(product, best_bid, -best_bid_volume))
+                    spread = best_ask - best_bid
+                    
+                ##design orders in 
+                # {low premium: + high volume, high premium: + low volume} 
+                # {high discount: - low volume, low discount: - high volume}
+                    premium_interval = [0.1, 0.4, 0.6, 0.9]
+                    resting_prices = [p * spread for p in premium_interval]
+                    volume_scaler = [0.7, 0.3, -0.3, -0.7]
+                    resting_volumes = [q * inventory for q in volume_scaler]
 
-                result[product] = orders              
+                    self.sendOrders(product, resting_prices, resting_volumes)
 
-##show trade
+                    result[product] = orders   
+           
+    
+    def sendOrders(self, product, prices, volumes):
+        orders = []
+        for i in range(len(prices)):
+            orders.append(Order(product, prices[i], volumes[i]))
+        
+        return orders
+        
+###show trades method to be called in Trade::run()
+    def showTrades(self, state: TradingState) :    
         for product in ["BANANAS"]:
             if product in state.market_trades:
                 tradeLst = state.market_trades[product]
@@ -62,22 +67,10 @@ class Trader:
                 for i in range(len(tradeLst)):
                     price = tradeLst[i].price
                     volume = tradeLst[i].quantity
-                    print(f"{volume} of {product} traded @ {price} (OWN)")  
-##
-        return result
-
-##moving average
-    def ma(lst, windowSize):
-        ma = []
-        for i in range(len(lst)):
-            if i < windowSize-1:
-                windowAvg = int(np.sum(lst[0:i+1])/(i+1))
-            else:
-                windowAvg = int(np.sum(lst[i-(windowSize-1):i+1])/windowSize)
-            ma.append(windowAvg)
-        return ma
-##
-
+                    if tradeLst[i].buyer == "SUBMISSION":
+                        print(f"{volume} of {product} traded @ {price} (SELF BUY)")  
+                    else:
+                        print(f"{volume} of {product} traded @ {price} (SELF SELL)") 
 
 
 
