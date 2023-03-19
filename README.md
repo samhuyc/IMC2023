@@ -19,9 +19,13 @@ this git repo is for IMC prosperity challenge
 - now is market volume, historical trade naive, need to incorporate; change scalers reacting to previous volume
 - delta - neutral volume?
 
+# /3_19_1/fairPrice
+### have a price as fair price, if asks < fair, buy; if bid > fair, sell
+- yields well with pearls (given an exogeneous fair price at 10000)
+- what should be the fair price under high violitility and/or one directional movement
+
 
 # Ideas: 
 - momentum strat
 - combination mean reversion + momentum (switch between volatility = standard dev.)
 
-	
